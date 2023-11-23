@@ -13,28 +13,43 @@ app.use(express.static("node_modules"));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.render(path.join(__dirname, "../src/views/index"));
+// TODOS EXAMPLE
+
+// Page
+app.get("/my-todos-example", (req, res) => {
+  res.render(path.join(__dirname, "../src/views/todo/index"));
 });
 
+// API
 app.get("/todos", (req, res) => {
-  res.render(path.join(__dirname, "../src/views/todos"), {
+  res.render(path.join(__dirname, "../src/views/todo/todos"), {
     todos: FAKE_TODOS_TABLE,
   });
 });
 
+// API
 app.post("/todos/create", async (req, res) => {
   const todo = req.body.todo;
 
   // Fake timeout
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  FAKE_TODOS_TABLE.push(todo);
+  FAKE_TODOS_TABLE.unshift(todo);
 
-  res.render(path.join(__dirname, "../src/views/todos"), {
+  res.render(path.join(__dirname, "../src/views/todo/todos"), {
     todos: [todo],
   });
 });
+
+// END TODOS EXAMPLE
+
+// COMPLEX STATE EXAMPLE
+
+app.get("/state-example", (req, res) => {
+  res.render(path.join(__dirname, "../src/views/state/index"));
+});
+
+// END COMPLEX STATE EXAMPLE
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
