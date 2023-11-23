@@ -4,7 +4,7 @@ import path from "path";
 import reload from "reload";
 
 export const FAKE_TODOS_TABLE: string[] = [];
-export let FAKE_BIRTH_DATE_TABLE: string | null = null;
+export let FAKE_BIRTH_YEAR_TABLE: string | null = null;
 
 const app = express();
 const port = 3000;
@@ -60,23 +60,20 @@ app.put("/state/age", (req, res) => {
   const birthDate = new Date();
   birthDate.setFullYear(birthDate.getFullYear() - age);
 
-  const day = birthDate.getDate();
-  const month = birthDate.getMonth() + 1;
   const year = birthDate.getFullYear();
+  const birthYear = year.toString();
 
-  const formattedBirthDate = `${day}.${month}.${year}`;
+  FAKE_BIRTH_YEAR_TABLE = birthYear;
 
-  FAKE_BIRTH_DATE_TABLE = formattedBirthDate;
-
-  res.render(path.join(__dirname, "../src/views/state/birth-date"), {
-    birthDate: formattedBirthDate,
+  res.render(path.join(__dirname, "../src/views/state/my-birth-year"), {
+    birthDate: birthYear,
   });
 });
 
 // API
-app.get("/state/birth-date", (req, res) => {
-  res.render(path.join(__dirname, "../src/views/state/birth-date"), {
-    birthDate: FAKE_BIRTH_DATE_TABLE ?? "No age provided",
+app.get("/state/birth-year", (req, res) => {
+  res.render(path.join(__dirname, "../src/views/state/my-birth-year"), {
+    birthDate: FAKE_BIRTH_YEAR_TABLE ?? "No age provided",
   });
 });
 
