@@ -23,8 +23,11 @@ app.get("/todos", (req, res) => {
   });
 });
 
-app.post("/todos/create", (req, res) => {
+app.post("/todos/create", async (req, res) => {
   const todo = req.body.todo;
+
+  // Fake timeout
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   FAKE_TODOS_TABLE.push(todo);
 
