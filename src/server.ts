@@ -2,7 +2,9 @@ import bodyParser from "body-parser";
 import express from "express";
 import path from "path";
 import reload from "reload";
-import { FAKE_TODOS_TABLE } from "./data/todos";
+
+export const FAKE_TODOS_TABLE: string[] = [];
+export let FAKE_BIRTH_DATE_TABLE: string | null = null;
 
 const app = express();
 const port = 3000;
@@ -45,8 +47,37 @@ app.post("/todos/create", async (req, res) => {
 
 // COMPLEX STATE EXAMPLE
 
+// Page
 app.get("/state-example", (req, res) => {
   res.render(path.join(__dirname, "../src/views/state/index"));
+});
+
+// API
+app.put("/state/age", (req, res) => {
+  // Find birth date by age
+  const age = req.body.age;
+
+  const birthDate = new Date();
+  birthDate.setFullYear(birthDate.getFullYear() - age);
+
+  const day = birthDate.getDate();
+  const month = birthDate.getMonth() + 1;
+  const year = birthDate.getFullYear();
+
+  const formattedBirthDate = `${day}.${month}.${year}`;
+
+  FAKE_BIRTH_DATE_TABLE = formattedBirthDate;
+
+  res.render(path.join(__dirname, "../src/views/state/birth-date"), {
+    birthDate: formattedBirthDate,
+  });
+});
+
+// API
+app.get("/state/birth-date", (req, res) => {
+  res.render(path.join(__dirname, "../src/views/state/birth-date"), {
+    birthDate: FAKE_BIRTH_DATE_TABLE ?? "No age provided",
+  });
 });
 
 // END COMPLEX STATE EXAMPLE
